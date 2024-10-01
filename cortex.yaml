@@ -1,0 +1,31 @@
+openapi: 3.0.1
+info:
+    title: checkout-demo
+    description: checkout-demo
+    x-cortex-git:
+        github:
+            repository: xendit/checkout-demo
+    x-cortex-tag: checkout-demo
+    x-cortex-oncall:
+        pagerduty:
+            id: PUEHMDH
+            type: SERVICE
+    x-cortex-owners:
+        - type: GROUP
+          name: xendit/invoice
+        - type: SLACK
+          channel: p-checkout
+        - email: adhiarta@xendit.co
+          type: EMAIL
+    x-cortex-dependency: []
+    x-cortex-service-groups:
+        - node
+        - web
+        - adhiarta@xendit.co
+        - P3
+        - Merchant-Interface
+    x-cortex-link:
+        - url: https://xendit.atlassian.net/wiki/spaces/INV/overview
+          name: Handbook
+          type: RUNBOOK
+          description: Handbook for Invoice
