@@ -46,7 +46,8 @@ router.post('/api/invoice', async (req, res) => {
             currency: req.body.currency,
             amount: req.body.amount,
             failure_redirect_url: req.body.redirect_url,
-            success_redirect_url: req.body.redirect_url
+            success_redirect_url: req.body.redirect_url,
+            callback_url: 'https://c3ac-114-10-42-200.ngrok-free.app/xendit-callback'
         };
 
         // Mengirim request ke Xendit API
@@ -75,14 +76,32 @@ router.post('/api/invoice', async (req, res) => {
             console.error('Xendit API response error:', e.response.data);
             return res.status(e.response.status).send(e.response.data);
         } else {
-            return res
-                .status(500)
-                .json({
-                    message: 'Internal Server Error',
-                    error: e.message || e
-                });
+            return res.status(500).json({
+                message: 'Internal Server Error',
+                error: e.message || e
+            });
         }
     }
 });
+
+/**
+ * Route untuk menerima callback dari Xendit
+ * Xendit akan mengirimkan data transaksi setelah pembayaran berhasil atau gagal.
+ */
+router.post('/xendit-callback', (req, res) => {
+    // Log seluruh body dari callback Xendit
+    console.log('Received callback from Xendit:', req.body);
+
+    // Logika pemrosesan callback, misalnya ketika pembayaran berhasil
+    if (req.body.status === 'PAID') {
+        console.log(`Payment successful for invoice: ${req.body.external_id}`);
+    } else if (req.body.status === 'FAILED') {
+        console.log(`Payment failed for invoice: ${req.body.external_id}`);
+    }
+
+    // Selalu kirim respons 200 untuk menandakan callback diterima
+    res.status(200).send('Callback received');
+});
+
 
 module.exports = router;
